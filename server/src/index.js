@@ -17,11 +17,12 @@ app.get('/health', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const volunteerRoutes = require('./routes/volunteerRoutes');
+app.use('/api/volunteers', volunteerRoutes);
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log('Server running on port ' + PORT);
+  app.listen(process.env.PORT || 5000, () => {
+    console.log('Server running on port ' + (process.env.PORT || 5000));
   });
 }
 
