@@ -17,8 +17,9 @@ app.get('/health', (req, res) => {
   });
 });
 
-const volunteerRoutes = require('./routes/volunteerRoutes');
-app.use('/api/volunteers', volunteerRoutes);
+app.use('/api/volunteers', require('./routes/volunteerRoutes'));
+app.use('/api/projects', require('./routes/projectRoutes'));
+app.use('/api/impacts', require('./routes/impactRoutes'));
 
 if (require.main === module) {
   app.listen(process.env.PORT || 5000, () => {
