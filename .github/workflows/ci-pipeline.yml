@@ -18,16 +18,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: server/package-lock.json
 
       - name: Install dependencies
         working-directory: ./server
-        run: npm install
+        run: npm ci
 
       - name: Run tests
         working-directory: ./server
-        run: npm test
+        run: npx jest --watchAll=false
 
       - name: Build Docker image
         run: docker build -t volunteer-tracker-server ./server
