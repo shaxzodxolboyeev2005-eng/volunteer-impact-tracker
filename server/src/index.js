@@ -16,7 +16,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/health', (req, res) => {
@@ -30,6 +29,7 @@ app.get('/health', (req, res) => {
 app.use('/api/volunteers', require('./routes/volunteerRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/impacts', require('./routes/impactRoutes'));
+app.use('/api/stats', require('./routes/statsRoutes'));
 
 if (require.main === module) {
   mongoose.connect(process.env.MONGODB_URI)

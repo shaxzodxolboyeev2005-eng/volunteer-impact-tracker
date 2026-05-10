@@ -9,6 +9,18 @@ const getVolunteers = async (req, res) => {
   }
 };
 
+const getVolunteerById = async (req, res) => {
+  try {
+    const volunteer = await Volunteer.findById(req.params.id);
+    if (!volunteer) {
+      return res.status(404).json({ message: 'Volunteer not found' });
+    }
+    res.status(200).json(volunteer);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const createVolunteer = async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -23,4 +35,32 @@ const createVolunteer = async (req, res) => {
   }
 };
 
-module.exports = { getVolunteers, createVolunteer };
+const updateVolunteer = async (req, res) => {
+  try {
+    const volunteer = await Volunteer.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!volunteer) {
+      return res.status(404).json({ message: 'Volunteer not found' });
+    }
+    res.status(200).json(volunteer);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteVolunteer = async (req, res) => {
+  try {
+    const volunteer = await Volunteer.findByIdAndDelete(req.params.id);
+    if (!volunteer) {
+      return res.status(404).json({ message: 'Volunteer not found' });
+    }
+    res.status(200).json({ message: 'Volunteer deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getVolunteers, getVolunteerById, createVolunteer, updateVolunteer, deleteVolunteer };

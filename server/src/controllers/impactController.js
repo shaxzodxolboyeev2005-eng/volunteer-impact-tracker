@@ -11,6 +11,18 @@ const getImpacts = async (req, res) => {
   }
 };
 
+const getImpactById = async (req, res) => {
+  try {
+    const impact = await Impact.findById(req.params.id)
+      .populate('volunteer', 'name email')
+      .populate('project', 'title');
+    if (!impact) return res.status(404).json({ message: 'Impact not found' });
+    res.status(200).json(impact);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const createImpact = async (req, res) => {
   try {
     const { volunteer, project, hoursSpent, description } = req.body;
@@ -25,4 +37,14 @@ const createImpact = async (req, res) => {
   }
 };
 
-module.exports = { getImpacts, createImpact };
+const deleteImpact = async (req, res) => {
+  try {
+    const impact = await Impact.findByIdAndDelete(req.params.id);
+    if (!impact) return res.status(404).json({ message: 'Impact not found' });
+    res.status(200).json({ message: 'Impact deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getImpacts, getImpactById, createImpact, deleteImpact };
