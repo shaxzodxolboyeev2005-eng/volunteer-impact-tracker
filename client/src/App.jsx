@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getVolunteers, getProjects, getImpacts } from './services/api';
+import { getVolunteers, getProjects, getImpacts, createVolunteer, createProject } from './services/api';
 import './App.css';
 
 function App() {
@@ -9,6 +9,8 @@ function App() {
   const [activeTab, setActiveTab] = useState('volunteers');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [newVolunteer, setNewVolunteer] = useState({ name: '', email: '' });
+  const [newProject, setNewProject] = useState({ title: '', description: '' });
 
   useEffect(() => {
     fetchData();
@@ -30,6 +32,28 @@ function App() {
       setError('Server is offline. Start the backend first.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCreateVolunteer = async () => {
+    if (!newVolunteer.name || !newVolunteer.email) return;
+    try {
+      await createVolunteer(newVolunteer);
+      setNewVolunteer({ name: '', email: '' });
+      fetchData();
+    } catch (err) {
+      setError('Failed to create volunteer.');
+    }
+  };
+
+  const handleCreateProject = async () => {
+    if (!newProject.title) return;
+    try {
+      await createProject(newProject);
+      setNewProject({ title: '', description: '' });
+      fetchData();
+    } catch (err) {
+      setError('Failed to create project.');
     }
   };
 
@@ -79,6 +103,20 @@ function App() {
       <main className='content'>
         {activeTab === 'volunteers' && (
           <div>
+            <div className='form'>
+              <h3>Add Volunteer</h3>
+              <input
+                placeholder='Name'
+                value={newVolunteer.name}
+                onChange={e => setNewVolunteer({...newVolunteer, name: e.target.value})}
+              />
+              <input
+                placeholder='Email'
+                value={newVolunteer.email}
+                onChange={e => setNewVolunteer({...newVolunteer, email: e.target.value})}
+              />
+              <button onClick={handleCreateVolunteer}>Add Volunteer</button>
+            </div>
             <h2>Volunteers ({volunteers.length})</h2>
             {volunteers.length === 0 ? (
               <p>No volunteers yet.</p>
@@ -96,6 +134,20 @@ function App() {
 
         {activeTab === 'projects' && (
           <div>
+            <div className='form'>
+              <h3>Add Project</h3>
+              <input
+                placeholder='Title'
+                value={newProject.title}
+                onChange={e => setNewProject({...newProject, title: e.target.value})}
+              />
+              <input
+                placeholder='Description'
+                value={newProject.description}
+                onChange={e => setNewProject({...newProject, description: e.target.value})}
+              />
+              <button onClick={handleCreateProject}>Add Project</button>
+            </div>
             <h2>Projects ({projects.length})</h2>
             {projects.length === 0 ? (
               <p>No projects yet.</p>
