@@ -25,6 +25,7 @@ function App() {
       setVolunteers(v.data);
       setProjects(p.data);
       setImpacts(i.data);
+      setError(null);
     } catch (err) {
       setError('Server is offline. Start the backend first.');
     } finally {

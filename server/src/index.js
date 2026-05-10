@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
 
@@ -31,9 +32,17 @@ app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/impacts', require('./routes/impactRoutes'));
 
 if (require.main === module) {
-  app.listen(process.env.PORT || 5000, () => {
-    console.log('Server running on port ' + (process.env.PORT || 5000));
-  });
+  mongoose.connect(process.env.MONGODB_URI)
+    .then(() => {
+      console.log('MongoDB Connected!');
+      app.listen(process.env.PORT || 5000, () => {
+        console.log('Server running on port ' + (process.env.PORT || 5000));
+      });
+    })
+    .catch((err) => {
+      console.error('MongoDB connection error:', err.message);
+      process.exit(1);
+    });
 }
 
 module.exports = app;
