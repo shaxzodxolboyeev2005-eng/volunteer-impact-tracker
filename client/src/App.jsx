@@ -1,122 +1,133 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { getVolunteers, getProjects, getImpacts } from './services/api';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [volunteers, setVolunteers] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [impacts, setImpacts] = useState([]);
+  const [activeTab, setActiveTab] = useState('volunteers');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [v, p, i] = await Promise.all([
+        getVolunteers(),
+        getProjects(),
+        getImpacts()
+      ]);
+      setVolunteers(v.data);
+      setProjects(p.data);
+      setImpacts(i.data);
+    } catch (err) {
+      setError('Server is offline. Start the backend first.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className='app'>
+      <header className='header'>
+        <h1>Volunteer Impact Tracker</h1>
+        <p>Track hours, measure social impact</p>
+      </header>
+
+      <div className='stats'>
+        <div className='stat-card'>
+          <h3>{volunteers.length}</h3>
+          <p>Volunteers</p>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+        <div className='stat-card'>
+          <h3>{projects.length}</h3>
+          <p>Projects</p>
         </div>
+        <div className='stat-card'>
+          <h3>{impacts.length}</h3>
+          <p>Impact Records</p>
+        </div>
+      </div>
+
+      <nav className='tabs'>
         <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+          className={activeTab === 'volunteers' ? 'active' : ''}
+          onClick={() => setActiveTab('volunteers')}>
+          Volunteers
         </button>
-      </section>
+        <button
+          className={activeTab === 'projects' ? 'active' : ''}
+          onClick={() => setActiveTab('projects')}>
+          Projects
+        </button>
+        <button
+          className={activeTab === 'impacts' ? 'active' : ''}
+          onClick={() => setActiveTab('impacts')}>
+          Impacts
+        </button>
+      </nav>
 
-      <div className="ticks"></div>
+      {loading && <p className='loading'>Loading...</p>}
+      {error && <p className='error'>{error}</p>}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <main className='content'>
+        {activeTab === 'volunteers' && (
+          <div>
+            <h2>Volunteers ({volunteers.length})</h2>
+            {volunteers.length === 0 ? (
+              <p>No volunteers yet.</p>
+            ) : (
+              volunteers.map(v => (
+                <div key={v._id} className='card'>
+                  <h4>{v.name}</h4>
+                  <p>{v.email}</p>
+                  <p>Hours: {v.totalHours}</p>
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {activeTab === 'projects' && (
+          <div>
+            <h2>Projects ({projects.length})</h2>
+            {projects.length === 0 ? (
+              <p>No projects yet.</p>
+            ) : (
+              projects.map(p => (
+                <div key={p._id} className='card'>
+                  <h4>{p.title}</h4>
+                  <p>{p.description}</p>
+                  <p>Status: {p.status}</p>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {activeTab === 'impacts' && (
+          <div>
+            <h2>Impact Records ({impacts.length})</h2>
+            {impacts.length === 0 ? (
+              <p>No impact records yet.</p>
+            ) : (
+              impacts.map(i => (
+                <div key={i._id} className='card'>
+                  <p>Hours: {i.hoursSpent}</p>
+                  <p>Score: {i.socialScore}</p>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
