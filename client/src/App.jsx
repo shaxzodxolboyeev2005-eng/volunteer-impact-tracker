@@ -1,8 +1,10 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getVolunteers, getProjects, getImpacts, createImpact } from './services/api';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
-import './App.css';
+
+// Удаляем внешний импорт CSS, чтобы избежать ошибок сборки на GitHub
+// import './App.css'; 
 
 const AVATARS = ['👨‍💻', '👩‍🎓', '🏐', '🎨', '🌿', '🦾', '🌍', '📚'];
 const ADMIN_PASSWORD = "cau_admin_2026"; 
@@ -83,6 +85,28 @@ function App() {
 
   return (
     <div className='app'>
+      {/* Внутренние стили для гарантированной сборки */}
+      <style>{`
+        .app { padding: 40px; max-width: 1200px; margin: 0 auto; font-family: 'Inter', sans-serif; background: #f8f9fe; min-height: 100vh; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .logo-circle { width: 45px; height: 45px; background: #1a237e; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(26,35,126,0.05); transition: 0.3s; border: 1px solid #edf0f7; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(26,35,126,0.1); }
+        .primary-btn { background: #1a237e; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .primary-btn:hover { background: #ff5c67; }
+        .cert-download-btn { background: transparent; border: 2px solid #1a237e; color: #1a237e; padding: 6px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+        .cert-download-btn:hover { background: #1a237e; color: white; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; background: #eee; padding: 5px; border-radius: 15px; width: fit-content; }
+        .tabs button { border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-weight: 700; background: transparent; color: #757575; }
+        .tabs button.active { background: white; color: #1a237e; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .activity-feed { background: white; padding: 30px; border-radius: 20px; border: 1px solid #edf0f7; }
+        .activity-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(26,35,126,0.8); display:flex; align-items:center; justify-content:center; z-index:100; }
+        .modal-content { background: white; padding: 40px; border-radius: 25px; width: 400px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #edf0f7; border-radius: 10px; font-family: inherit; }
+      `}</style>
+
       {showReg && (
         <div className='modal-overlay'>
           <div className='modal-content'>
@@ -133,12 +157,12 @@ function App() {
             <div className='grid'>
               {volunteers.map((v, idx) => (
                 <div key={v._id} className='card'>
-                  <div className='card-header'>
-                    <div className='avatar-large'>{AVATARS[idx % AVATARS.length]}</div>
+                  <div className='card-header' style={{display:'flex', justifyContent:'space-between', marginBottom:'15px'}}>
+                    <div style={{fontSize:'2rem'}}>{AVATARS[idx % AVATARS.length]}</div>
                     <span style={{background:'#f4f7fe', padding:'4px 8px', borderRadius:'6px', fontSize:'0.7rem', fontWeight:800}}>ID: {v._id.slice(-4)}</span>
                   </div>
-                  <h4>{v.name}</h4>
-                  <p>{v.email}</p>
+                  <h4 style={{margin:'10px 0 5px 0'}}>{v.name}</h4>
+                  <p style={{margin:0, fontSize:'0.85rem', color:'#757575'}}>{v.email}</p>
                   <div style={{marginTop: '20px', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                     <span style={{color:'#ff5c67', fontSize:'1.1rem', fontWeight:800}}>{v.totalHours || 0}h</span>
                     <button className='cert-download-btn' onClick={() => generatePDF(v)}>Certificate</button>
@@ -150,7 +174,7 @@ function App() {
               <h3 style={{marginTop: 0, color: '#1a237e'}}>Recent Activity</h3>
               {impacts.slice(0, 5).map(imp => (
                 <div key={imp._id} className='activity-item'>
-                  <div className='avatar-mini'>✨</div>
+                  <div style={{fontSize:'1.2rem'}}>✨</div>
                   <div>
                     <span style={{fontWeight: 700}}>{imp.volunteerId?.name || 'User'}</span>
                     <span style={{color: '#757575'}}> added </span>
