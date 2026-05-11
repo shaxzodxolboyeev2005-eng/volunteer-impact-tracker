@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getImpacts, createImpact } = require('../controllers/impactController');
+const { createImpact, getImpacts } = require('../controllers/impactController');
 
-router.get('/', getImpacts);
 router.post('/', createImpact);
+router.get('/', getImpacts);
 
 module.exports = router;

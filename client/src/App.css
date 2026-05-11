@@ -1,153 +1,243 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root {
+  --primary: #ff5c67;
+  --secondary: #1a237e; /* Более глубокий синий для текста */
+  --bg: #f0f2f5; /* Контрастный фон страницы */
+  --card-bg: #ffffff;
+  --text-main: #1a237e;
+  --text-grey: #757575; /* Серый, который видно */
+  --border: #d1d5db;
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f0f2f5;
-  color: #333;
+  background-color: var(--bg);
+  color: var(--text-main);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin: 0;
 }
 
 .app {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 30px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.header h1 {
-  font-size: 2rem;
-  margin-bottom: 8px;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.stat-card h3 {
-  font-size: 2rem;
-  color: #667eea;
-}
-
-.tabs {
+/* Навигация */
+.nav-bar {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  margin-bottom: 40px;
 }
 
-.tabs button {
-  padding: 10px 24px;
+.logo-circle {
+  width: 45px;
+  height: 45px;
+  background: var(--secondary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+}
+
+/* Переключатель Ролей (Исправлено, теперь его видно) */
+.role-switcher {
+  display: flex;
+  background: #e0e6ed; /* Серый фон для контраста */
+  padding: 5px;
+  border-radius: 15px;
+  border: 1px solid #d1d5db;
+}
+
+.role-btn {
   border: none;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text-main);
+  background: transparent;
+  transition: 0.3s;
+}
+
+.role-btn.active {
   background: white;
+  color: var(--primary);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Темный фон */
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+/* Инпуты */
+input, select {
+  display: block;
+  width: 100%;
+  padding: 14px 18px;
+  margin: 12px 0;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background: #f8fafc;
+  color: var(--text-main); /* Чтобы текст при вводе было видно */
+}
+
+input:focus, select:focus {
+  border-color: var(--primary);
+  background: white;
+}
+
+/* Кнопки */
+.primary-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cancel-btn {
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Вкладки (Исправлено) */
+.tabs button {
+  background: none;
+  border: none;
+  padding-bottom: 15px;
+  font-weight: 700;
   cursor: pointer;
   font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: var(--text-grey); /* Серый цвет для неактивных */
 }
 
 .tabs button.active {
-  background: #667eea;
-  color: white;
+  color: var(--text-main); /* Темный для активной */
+  border-bottom: 3px solid #ff5c67;
 }
 
-.content {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.form {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.form h3 {
-  color: #667eea;
-  margin-bottom: 5px;
-}
-
-.form input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  outline: none;
-}
-
-.form input:focus {
-  border-color: #667eea;
-}
-
-.form button {
-  padding: 10px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.form button:hover {
-  background: #764ba2;
+/* Сетка и Карточки (Контрастные) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
 }
 
 .card {
-  background: #f8f9fa;
-  padding: 16px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  border-left: 4px solid #667eea;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Легкая тень */
 }
 
 .card h4 {
-  margin-bottom: 6px;
-  color: #333;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: var(--text-main);
 }
 
-.loading {
-  text-align: center;
-  color: #667eea;
-  padding: 20px;
+.card p {
+  margin: 0;
+  color: var(--text-grey);
+  font-size: 0.9rem;
 }
-
-.error {
-  text-align: center;
-  color: #e74c3c;
-  padding: 20px;
-  background: #ffeaea;
+.cert-download-btn {
+  background: white;
+  border: 1.5px solid #48bb78;
+  color: #48bb78;
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: 0.3s;
+}
+.cert-download-btn:hover {
+  background: #48bb78;
+  color: white;
+}
+.activity-feed {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  margin-top: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f2f5;
+}
+.activity-item:last-child { border: none; }
+.avatar-mini {
+  width: 35px;
+  height: 35px;
+  background: #fef2f2;
+  color: var(--primary);
   border-radius: 8px;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
 }
-
-h2 {
+.project-tag {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 5px;
+  display: block;
+}
+.avatar-large {
+  width: 60px;
+  height: 60px;
+  background: #f0f2f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
   margin-bottom: 15px;
-  color: #333;
+  border: 2px solid white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
