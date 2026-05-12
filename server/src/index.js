@@ -20,14 +20,16 @@ const swaggerOptions = {
 const specs = swaggerUi.setup(swaggerJsdoc(swaggerOptions));
 app.use('/api-docs', swaggerUi.serve, specs);
 
-app.get('/health', (req, res) => res.json({ status: 'ok' }));
+app.get('/health', (req, res) => res.json({ status: 'ok', message: 'Volunteer Impact Tracker API is running', timestamp: new Date().toISOString() }));
 app.use('/api/volunteers', require('./routes/volunteerRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/impacts', require('./routes/impactRoutes'));
 app.use('/api/stats', require('./routes/statsRoutes'));
 app.use('/api/chat', require('./routes/chatRoutes'));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log('Server started on port ' + PORT));
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log('Server started on port ' + PORT));
+}
 
 module.exports = app;
