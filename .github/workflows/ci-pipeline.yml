@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./server
-        run: npm install
+        run: npm ci
 
       - name: Security Audit (SAST)
         working-directory: ./server
@@ -29,7 +29,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./server
-        run: npx jest --watchAll=false
+        run: npx --yes jest --watchAll=false
 
       - name: Build Docker image
         run: docker build -t volunteer-tracker-server ./server
