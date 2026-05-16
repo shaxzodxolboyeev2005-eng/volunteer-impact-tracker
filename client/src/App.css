@@ -70,3 +70,15 @@ h2 { margin-bottom: 15px; color: #333; display: flex; align-items: center; gap: 
 
 .success { text-align: center; color: #27ae60; padding: 15px 20px; background: #eafaf1; border-radius: 8px; margin-bottom: 20px; font-weight: 600; }
 .no-data { text-align: center; color: #888; padding: 40px 20px; }
+
+.form input, .form select, .form textarea {
+  color: #333333 !important;
+  background-color: #ffffff !important;
+}
+.form input::placeholder {
+  color: #999999 !important;
+}
+.form select option {
+  color: #333333;
+  background-color: #ffffff;
+}

@@ -70,13 +70,17 @@ function App() {
       return;
     }
     try {
-      await createImpact({ ...logWork, hoursSpent: Number(logWork.hoursSpent) });
+      await createImpact({
+        volunteerId: logWork.volunteer,
+        projectId: logWork.project,
+        hoursSpent: Number(logWork.hoursSpent),
+        description: logWork.description
+      });
       setLogWork({ volunteer: '', project: '', hoursSpent: '', description: '' });
       fetchData();
-      showSuccess('Work logged successfully! Social score updated.');
+      showSuccess('Work logged! Social score updated.');
     } catch (err) { setError('Failed to log work.'); }
   };
-
   const filteredVolunteers = volunteers.filter(v =>
     v.name.toLowerCase().includes(search.toLowerCase()) ||
     v.email.toLowerCase().includes(search.toLowerCase())
